@@ -99,7 +99,6 @@ jobs:
       - image: cimg/aws:2023.04
     steps:
       - checkout
-      - install-awscli
       - install-eksctl
       - run:
           name: "Ensure back-end infrastructure exists"
