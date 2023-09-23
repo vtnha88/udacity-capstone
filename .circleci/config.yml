@@ -1,5 +1,40 @@
 version: 2.1
 
+commands:
+  install-awscli:
+    description: Install aws cli
+    steps:
+      - run:
+          name: Install aws cli
+          command: |
+            # Install AWS cli
+            current_dir=$( pwd )
+            cd /tmp/
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+  install-ansible:
+    description: Install ansible
+    steps:
+      - run:
+          name: Install ansible
+          command: |
+            sudo apt update
+            sudo apt install -y python3-venv python3-pip
+            python3 -m pip install --upgrade pip
+            python3 -m pip install --user ansible
+
+  install-eksctl:
+    description: Install eksctl
+    steps:
+      - run:
+          name: Install eksctl
+          command: |
+            sudo apt update
+            curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+            sudo mv /tmp/eksctl /usr/local/bin
+            eksctl version
+
 jobs:
   test-lint-build:
     docker:
@@ -59,6 +94,21 @@ jobs:
             docker tag $DOCKER_NAME $DOCKER_USERNAME/$DOCKER_NAME:$CIRCLE_WORKFLOW_ID
             docker push $DOCKER_USERNAME/$DOCKER_NAME:$CIRCLE_WORKFLOW_ID
   
+  deploy-infrastructure:
+    docker:
+      - image: cimg/aws:2023.04
+    steps:
+      - checkout
+      - install-awscli
+      - install-eksctl
+      - run:
+          name: "Ensure back-end infrastructure exists"
+          command: |
+              eksctl create cluster --name eksctl-capstone --region=us-east-1
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - inventory_backend_ip.txt
 
 workflows:
   default:
@@ -67,4 +117,6 @@ workflows:
       - build-scan-upload-docker:
           requires:
             - test-lint-build
-      
+      - deploy-infrastructure:
+          requires:
+                - build-scan-upload-docker
