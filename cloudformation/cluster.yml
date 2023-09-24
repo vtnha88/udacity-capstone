@@ -1,5 +1,5 @@
 Description: >
-  Felix Lutze / Capstone Project
+  Nha Vo / Capstone Project
   Creates an Amazon EKS Cluster
 Parameters:
   EnvironmentName:
@@ -38,12 +38,12 @@ Resources:
   CapstoneProjectCluster:
     Type: AWS::EKS::Cluster
     Properties:
-      Version: "1.19"
+      Version: "1.20"
       Name: !Sub ${EnvironmentName}-cluster
       RoleArn: !GetAtt EKSClusterRole.Arn
       ResourcesVpcConfig:
         SecurityGroupIds:
-          - Fn::ImportValue: !Sub ${EnvironmentName}-SCG
+          - Fn::ImportValue: !Sub ${EnvironmentName}-SG
         SubnetIds:
           Fn::Split:
             - ","
