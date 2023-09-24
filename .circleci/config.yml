@@ -104,10 +104,6 @@ jobs:
           name: "Ensure back-end infrastructure exists"
           command: |
               eksctl create cluster --name eksctl-capstone --region=us-east-1
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - inventory_backend_ip.txt
 
 workflows:
   default:
