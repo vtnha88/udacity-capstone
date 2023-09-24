@@ -1,67 +1,74 @@
-[![mithie](https://circleci.com/gh/mithie/udacity-cloud-devops-engineer-project-4.svg?style=svg)](https://circleci.com/gh/mithie/udacity-cloud-devops-engineer-project-4)
+# Cloud DevOps Engineer Capstone Project
 
-## Project Overview
+This project represents the successful completion of the last final Capstone project and the Cloud DevOps Engineer Nanodegree at Udacity.
 
-In this project, you will apply the skills you have acquired in this course to operationalize a Machine Learning Microservice API. 
+## What did I learn?
 
-You are given a pre-trained, `sklearn` model that has been trained to predict housing prices in Boston according to several features, such as average rooms in a home and data about highway access, teacher-to-pupil ratios, and so on. You can read more about the data, which was initially taken from Kaggle, on [the data source site](https://www.kaggle.com/c/boston-housing). This project tests your ability to operationalize a Python flask app—in a provided file, `app.py`—that serves out predictions (inference) about housing prices through API calls. This project could be extended to any pre-trained machine learning model, such as those for image recognition and data labeling.
+In this project, I applied the skills and knowledge I developed throughout the Cloud DevOps Nanodegree program. These include:
+- Using Circle CI to implement Continuous Integration and Continuous Deployment
+- Building pipelines
+- Working with Ansible and CloudFormation to deploy clusters
+- Building Kubernetes clusters
+- Building Docker containers in pipelines
+- Working in AWS
 
-### Project Tasks
+## Application
 
-Your project goal is to operationalize this working, machine learning microservice using [kubernetes](https://kubernetes.io/), which is an open-source system for automating the management of containerized applications. In this project you will:
-* Test your project code using linting
-* Complete a Dockerfile to containerize this application
-* Deploy your containerized application using Docker and make a prediction
-* Improve the log statements in the source code for this application
-* Configure Kubernetes and create a Kubernetes cluster
-* Deploy a container using Kubernetes and make a prediction
-* Upload a complete Github repo with CircleCI to indicate that your code has been tested
+The Application is based on a python3 script using <a target="_blank" href="https://flask.palletsprojects.com">flask</a> to render a simple webpage in the user's browser.
+A requirements.txt is used to ensure that all needed dependencies come along with the Application.
 
-You can find a detailed [project rubric, here](https://review.udacity.com/#!/rubrics/2576/view).
+## Kubernetes Cluster
 
-**The final implementation of the project will showcase your abilities to operationalize production microservices.**
+I used AWS CloudFormation to deploy the Kubernetes Cluster.
+The CloudFormation Deployment can be broken down into four Parts:
+- **Networking**, to ensure new nodes can communicate with the Cluster
+- **Elastic Kubernetes Service (EKS)** is used to create a Kubernetes Cluster
+- **NodeGroup**, each NodeGroup has a set of rules to define how instances are operated and created for the EKS-Cluster
+- **Management** is needed to configure and manage the Cluster and its deployments and services. I created two management hosts for extra redundancy if one of them fails.
 
----
+#### List of deployed Stacks:
+![CloudFormation](./screenshots/cloudformation_stacks.PNG)
 
-## Setup the Environment
+#### List of deployed Instances:
+![Show Instances](./screenshots/show_instances.PNG)
 
-* Create a virtualenv and activate it by executing `python3 -m venv venv`
-* Source the virtual environment: `source venv/bin/activate`
-* Run `make install` to install the necessary dependencies
+## CircleCi - CI/CD Pipelines
 
-### Running `app.py`
+I used CircleCi to create a CI/CD Pipeline to test and deploy changes manually before they get deployed automatically to the Cluster using Ansible.
 
-1. Standalone:  `python app.py`
-2. Run in Docker:  `./run_docker.sh`
-3. Run in Kubernetes:  `./upload_docker.sh && ./run_kubernetes.sh`
+#### From Zero to Hero demonstration:
 
-### Kubernetes Steps
+![CircleCi Pipeline](./screenshots/circleci_pipeline.PNG)
 
-* Setup and Configure Docker locally
-* Setup and Configure Kubernetes locally
-* Create a kubernetes secret to store the credentials of the private Docker registry
-  ```bash
-    kubectl create secret docker-registry regcred \
-        --docker-server=https://index.docker.io/v1/ \
-        --docker-username=<DOCKERHUB_USERNAME> \
-        --docker-password=<DOCKERHUB_PASSWORD> \
-        --docker-email=<DOCKER_EMAIL>
-  ```
-* Create Flask app in Container
-* Run via kubectl
+## Linting using Pylint and Hadolint
 
-## Directory Structure
+Linting is used to check if the Application and Dockerfile is syntactically correct.
+This process makes sure that the code quality is always as good as possible.
 
-| Directory/File | Description |
-| ---- | ----------- |
-| `.circleci/config.yml` | CircleCI configuration |
-| `model_data` | Trained model data for housing prices in Boston |
-| `output_txt_files` | Docker and Kubernetes log output |
-| `app.py` | REST Endpoint for predicting housing prices in Boston |
-| `Dockerfile` | Dockerfile containing the application and its dependencies |
-| `make_prediction.sh` | Calls prediction REST endpoint and simulates sample prediction |
-| `Makefile` | Build file of the project |
-| `requirements.txt` | Python requirements |
-| `run_docker.sh` | Shell script for creating and running docker container |
-| `run_kubernetes.sh` | Shell script to deploy docker container on Kubernetes cluster |
-| `upload_docker.sh` | Shell script for uploading locally built docker image to dockerhub repository |
+#### This is the output when the step fails:
+
+![Linting step fail](./screenshots/linting_step_fail.PNG)
+
+
+#### This is the output when the step passes:
+
+![Linting step fail](./screenshots/linting_step_success.PNG)
+
+## Access the Application
+
+After the EKS-Cluster has been successfully configured using Ansible within the CI/CD Pipeline, I checked the deployment and service as follows:
+
+```
+$ kubectl get deployments
+NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
+capstone-project-deployment   4/4     4            4           68m
+
+$ kubectl get services
+NAME                       TYPE           CLUSTER-IP       EXTERNAL-IP                                                                  PORT(S)        AGE
+capstone-project-service   LoadBalancer   10.100.240.221   a9d7166a2525d405db00907ffb57de4e-1479088191.eu-central-1.elb.amazonaws.com   80:32299/TCP   69m
+kubernetes                 ClusterIP      10.100.0.1       <none>                                                                       443/TCP        80m
+```
+
+Public LB DNS: http://a9d7166a2525d405db00907ffb57de4e-1479088191.eu-central-1.elb.amazonaws.com
+
+![Access LB DNS](./screenshots/access_lb_dns_demo.PNG)
