@@ -51,7 +51,7 @@ Resources:
                 Fn::Sub: ${EnvironmentName}-PUB-NETS
 Outputs:
   EksId:
-    Description: EKS id
+    Description: EKS Id
     Value: !Ref CapstoneProjectCluster
     Export:
       Name: !Sub ${EnvironmentName}-EKSCluster
