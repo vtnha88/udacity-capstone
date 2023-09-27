@@ -24,25 +24,25 @@ I utilized AWS CloudFormation to orchestrate the deployment of the Kubernetes Cl
 - NodeGroups play a crucial role, each equipped with a specific set of rules dictating how instances are operated and created within the EKS cluster.
 - Management is imperative for configuring and overseeing the cluster, along with its deployments and services
 ### List of deployed Stacks:
-image
+![CloudFormation](./screenshots/cloudformation_stacks.PNG)
 ### List of deployed Instances:
-image
+![Show Instances](./screenshots/show_instances.PNG)
 ## CircleCi - CI/CD Pipelines
 I used CircleCi to create a CI/CD Pipeline to test and deploy changes manually before they get deployed automatically to the Cluster using Ansible.
-image
+![CircleCi Pipeline](./screenshots/circleci_pipeline.PNG)
 
 ## Linting using Pylint and Hadolint
 Linting is used to check if the Application and Dockerfile is syntactically correct. This process makes sure that the code quality is always as good as possible.
 
 ### This is the output when the step fails:
-image
+![Linting step fail](./screenshots/linting_step_fail.PNG)
 
 ### This is the output when the step passes:
-image
+![Linting step success](./screenshots/linting_step_success.PNG)
 
 ## Access the Application
 After the EKS-Cluster has been successfully configured using Ansible within the CI/CD Pipeline, I checked the deployment and service as follows:
 
 
-<!-- Public LB DNS: http://a9d7166a2525d405db00907ffb57de4e-1479088191.eu-central-1.elb.amazonaws.com -->
-<image>
+Public LB DNS: http://a58976cea86f8416b8d9091e0c623c35-1811317059.us-east-2.elb.amazonaws.com/
+![Access LB DNS](./screenshots/access_lb_dns.PNG)
