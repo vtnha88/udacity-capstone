@@ -46,3 +46,5 @@ After the EKS-Cluster has been successfully configured using Ansible within the 
 
 Public LB DNS: http://a58976cea86f8416b8d9091e0c623c35-1811317059.us-east-2.elb.amazonaws.com/
 ![Access LB DNS](./screenshots/access_lb_dns.png)
+
+Github repo: https://github.com/vtnha88/udacity-capstone
