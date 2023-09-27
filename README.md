@@ -25,11 +25,15 @@ I utilized AWS CloudFormation to orchestrate the deployment of the Kubernetes Cl
 - Management is imperative for configuring and overseeing the cluster, along with its deployments and services
 ### List of deployed Stacks:
 ![CloudFormation](./screenshots/cloudformation_stacks.png)
+
 ### List of deployed Instances:
 ![Show Instances](./screenshots/show_instances.png)
+
 ## CircleCi - CI/CD Pipelines
 I used CircleCi to create a CI/CD Pipeline to test and deploy changes manually before they get deployed automatically to the Cluster using Ansible.
 ![CircleCi Pipeline](./screenshots/circleci_pipeline.png)
+The project uses a centralized image repository to manage images built in the project. After a clean build, images are pushed to the repository.
+![Docker Hub](./screenshots/docker-hub.png)
 
 ## Linting using Pylint and Hadolint
 Linting is used to check if the Application and Dockerfile is syntactically correct. This process makes sure that the code quality is always as good as possible.
@@ -42,9 +46,10 @@ Linting is used to check if the Application and Dockerfile is syntactically corr
 
 ## Access the Application
 After the EKS-Cluster has been successfully configured using Ansible within the CI/CD Pipeline, I checked the deployment and service as follows:
-
+![Kubectl deployment](./screenshots/kubectl-deployments.png)
 
 Public LB DNS: http://a58976cea86f8416b8d9091e0c623c35-1811317059.us-east-2.elb.amazonaws.com/
 ![Access LB DNS](./screenshots/access_lb_dns.png)
 
 Github repo: https://github.com/vtnha88/udacity-capstone
+ 
